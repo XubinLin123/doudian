@@ -1,10 +1,16 @@
 	export default async function handler(req, res) {
 	  // ====== 新增：允许跨域请求的代码 ======
 	  // 设置 CORS 头
+	  res.setHeader('Access-Control-Allow-Credentials', 'true');
 	  res.setHeader('Access-Control-Allow-Origin', 'https://xubinlin123.github.io');
-	  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-	  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-	  
+	  // 或者用 * 允许所有来源（测试时用）
+	  // res.setHeader('Access-Control-Allow-Origin', '*');
+	  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
+	  res.setHeader(
+	    'Access-Control-Allow-Headers',
+	    'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
+	  );
+		
 	  // 处理预检请求
 	  if (req.method === 'OPTIONS') {
 	    return res.status(200).end();
