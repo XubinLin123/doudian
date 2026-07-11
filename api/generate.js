@@ -1,20 +1,24 @@
 	export default async function handler(req, res) {
-	  // ====== 新增：允许跨域请求的代码 ======
-	  // 设置 CORS 头
+	 // ========== 1. 先设置 CORS 头（必须放在最前面）==========
 	  res.setHeader('Access-Control-Allow-Credentials', 'true');
 	  res.setHeader('Access-Control-Allow-Origin', 'https://xubinlin123.github.io');
-	  // 或者用 * 允许所有来源（测试时用）
-	  res.setHeader('Access-Control-Allow-Origin', '*');
-	  //res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
-	  // res.setHeader(
-	  //  'Access-Control-Allow-Headers',
-	  // 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
-	  //  );
-	  
-	  // 处理预检请求
+	  // 如果要允许多个域名，可以改成：
+	  // const allowedOrigins = ['https://xubinlin123.github.io', 'http://localhost:3000'];
+	  // const origin = req.headers.origin;
+	  // if (allowedOrigins.includes(origin)) {
+	  //   res.setHeader('Access-Control-Allow-Origin', origin);
+	  // }
+	  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
+	  res.setHeader(
+	    'Access-Control-Allow-Headers',
+	    'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
+	  );
+	
+	  // ========== 2. 处理 OPTIONS 预检请求（必须返回 200）==========
 	  if (req.method === 'OPTIONS') {
 	    return res.status(200).end();
 	  }
+		
 	  if (req.method !== 'POST') {
 	    return res.status(405).json({ error: 'Method Not Allowed' });
 	  }
