@@ -108,11 +108,7 @@
       box-shadow: 0 4px 12px rgba(0,0,0,0.1);
       padding: 8px 0;
       min-width: 120px;
-      display: none;
-    }
-
-    .user-avatar:hover .user-dropdown {
-      display: block;
+      z-index: 101;
     }
 
     .dropdown-item {
@@ -694,13 +690,17 @@
       <div v-if="!isLoggedIn">
         <button class="login-btn" @click="showLoginModal = true">登录</button>
       </div>
-      <div v-else style="position: relative;">
+      <div v-else 
+           style="position: relative;"
+           @mouseenter="clearDropdownTimer"
+           @mouseleave="startDropdownTimer"
+      >
         <div class="user-avatar" @click="showDropdown = !showDropdown">
           {{ userName.charAt(0) }}
-          <div class="user-dropdown" v-show="showDropdown">
-            <div class="dropdown-item" @click="showDropdown = false">个人中心</div>
-            <div class="dropdown-item" @click="handleLogout">退出登录</div>
-          </div>
+        </div>
+        <div class="user-dropdown" v-show="showDropdown">
+          <div class="dropdown-item" @click="showDropdown = false">个人中心</div>
+          <div class="dropdown-item" @click="handleLogout">退出登录</div>
         </div>
       </div>
     </nav>
@@ -1293,6 +1293,23 @@
         // 初始化
         init();
 
+        // 下拉菜单定时器
+        let dropdownTimer = null;
+
+        const clearDropdownTimer = () => {
+          if (dropdownTimer) {
+            clearTimeout(dropdownTimer);
+            dropdownTimer = null;
+          }
+          showDropdown.value = true;
+        };
+
+        const startDropdownTimer = () => {
+          dropdownTimer = setTimeout(() => {
+            showDropdown.value = false;
+          }, 2000);
+        };
+
         return {
           step,
           isDragging,
@@ -1321,7 +1338,9 @@
           copyResult,
           publishToDoudian,
           resetProcess,
-          checkApiHealth
+          checkApiHealth,
+          clearDropdownTimer,
+          startDropdownTimer
         };
       }
     }).mount('#app');
